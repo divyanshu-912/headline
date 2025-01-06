@@ -10,7 +10,9 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from rouge_score import rouge_scorer
 import math
 import os
-os.chdir(r'f:\Python Project\Headline app')
+# Change the working directory to the script's location
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Load datasets
 train_path = r'f:\Python Project\Headline app\LABELLED_TRAIN.csv'
