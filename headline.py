@@ -2,18 +2,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-from torch.utils.data import DataLoader, Dataset
 import torch
+from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from rouge_score import rouge_scorer
 import math
+import os
+os.chdir(r'f:\Python Project\Headline app')
 
 # Load datasets
-train_path = 'LABELLED_TRAIN.csv'
-dev_path = 'LABELLED_DEV.csv'
-test_path = 'UNLABELLED_TEST.csv'
+train_path = r'f:\Python Project\Headline app\LABELLED_TRAIN.csv'
+dev_path = r'f:\Python Project\Headline app\LABELLED_DEV.csv'
+test_path =r'f:\Python Project\Headline app\UNLABELLED_TEST.csv'
 
 # Load datasets into pandas DataFrames
 train_df = pd.read_csv(train_path)
