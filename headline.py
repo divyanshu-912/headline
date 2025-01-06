@@ -11,9 +11,9 @@ from rouge_score import rouge_scorer
 import math
 
 # Load datasets
-train_path = '/content/LABELLED_TRAIN.csv'
-dev_path = '/content/LABELLED_DEV.csv'
-test_path = '/content/UNLABELLED_TEST.csv'
+train_path = 'LABELLED_TRAIN.csv'
+dev_path = 'LABELLED_DEV.csv'
+test_path = 'UNLABELLED_TEST.csv'
 
 # Load datasets into pandas DataFrames
 train_df = pd.read_csv(train_path)
