@@ -1,8 +1,10 @@
 import pandas as pd
-import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 from transformers import T5Tokenizer, T5ForConditionalGeneration
+# Use a pipeline as a high-level helper
+from transformers import pipeline
+
 import torch
 from torch.utils.data import DataLoader, Dataset
 from sklearn.model_selection import train_test_split
@@ -11,31 +13,36 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from rouge_score import rouge_scorer
 import math
 import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+#This is a project for a machine learning app that will generate a headline for the given article(by us)
 
+os.chdir(r'f:\Python Project\Headline app')
 
 # Load datasets
-train_path = './data/train.csv' 
-dev_path = './data/dev.csv' 
-test_path ='./data/unlabelled.csv' 
+train_path = r'f:\Python Project\Headline app\LABELLED_TRAIN.csv'                                  
+dev_path = r'f:\Python Project\Headline app\LABELLED_DEV.csv'
+test_path =r'f:\Python Project\Headline app\UNLABELLED_TEST.csv'
 
 # Load datasets into pandas DataFrames
 train_df = pd.read_csv(train_path)
 dev_df = pd.read_csv(dev_path)
 test_df = pd.read_csv(test_path)
 
+
+
+
+
 class HeadlineDataset(Dataset):
-    def _init_(self, articles, headlines, tokenizer, max_len=512):
+    def __init__(self, articles, headlines, tokenizer, max_len=512):  # Double underscores in __init__
         self.articles = articles
         self.headlines = headlines
         self.tokenizer = tokenizer
         self.max_len = max_len
 
-    def _len_(self):
+    def __len__(self):  # Double underscores in __len__
         return len(self.articles)
 
-    def _getitem_(self, idx):
+    def __getitem__(self, idx):  # Double underscores in __getitem__
         article = "summarize: " + self.articles[idx]
         headline = self.headlines[idx]
 
@@ -61,6 +68,8 @@ class HeadlineDataset(Dataset):
             'labels': targets['input_ids'].squeeze(0),
             'raw_headline': headline  # Added for ROUGE calculation
         }
+
+
 
 def calculate_rouge_batch(predictions, references):
     scorer = rouge_scorer.RougeScorer(['rougeL'], use_stemmer=True)
@@ -189,9 +198,14 @@ def generate_test_predictions(model, test_df, tokenizer, device):
     print("Predictions saved to test_predictions.csv")
 
 # Main training setup
-print("Initializing model and tokenizer...")
+print("Initializing model and tokenizer..... Made by Divyanshu Kannaujiya")
 tokenizer = T5Tokenizer.from_pretrained('t5-small')
+
+# tokenizer = T5Tokenizer.from_pretrained('t5-base', legacy=False)
 model = T5ForConditionalGeneration.from_pretrained('t5-small')
+# tokenizer = T5Tokenizer.from_pretrained('./local_t5_base')
+# model = T5ForConditionalGeneration.from_pretrained('./local_t5_base')
+
 
 # Prepare data
 X_train = train_df['News Article'].tolist()
@@ -241,7 +255,7 @@ for epoch in range(epochs):
     # Save best model based on ROUGE-L score
     if val_rouge > best_rouge_l:
         best_rouge_l = val_rouge
-        model.save_pretrained("best_headline_model")
+        model.save_pretrained("Best_headline_model")
         tokenizer.save_pretrained("best_headline_model")
         print(f"Saved best model with ROUGE-L: {val_rouge:.4f}")
 
@@ -271,5 +285,6 @@ plt.tight_layout()
 plt.show()
 
 # Generate predictions for test data
-print("Generating predictions for test data...")
+print("Generating predictions for test data......Made by Divyanshu Kannaujiya")
 generate_test_predictions(model, test_df, tokenizer, device)
+
